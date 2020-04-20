@@ -82,6 +82,10 @@ class Game extends Component<GameProps> {
 
   startGame() {
     this.restartPositionAndVelocityOfBall();
+    // If need to reset bricks for a new game
+    if(this.state.bricks.length !== bricksCols * bricksRows) {
+      this.setState({bricks: this.initBricks()});
+    }
     this.runGameLoop();
   }
 
@@ -257,7 +261,7 @@ const App = () => {
       <div className="game-info">
         <span className="lives mr-5"><strong>Lives:</strong> {lives}</span>
         <span className="scores mr-5"><strong>Scores:</strong> {scores}</span>
-        {username && <span className="username"><strong>Name:</strong> {username}</span>}
+        {username && <span className="username"><strong>Player:</strong> {username}</span>}
       </div>
       <StartGameModal
         show={showStart}
