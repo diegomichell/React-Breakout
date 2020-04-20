@@ -5,7 +5,7 @@ import React, {Component, useState} from "react";
 import Konva from "konva";
 import {Circle, Layer, Rect, Stage} from "react-konva";
 
-import "./App.css";
+import "./App.scss";
 
 const HEIGHT = 495;
 const WIDTH = 370;

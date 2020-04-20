@@ -1,0 +1,28 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .app-title {
+    color: deepskyblue;
+    margin-bottom: 0;
+  }
+
+  .game-stage {
+    border: 2px solid #000;
+  }
+
+  .game-info {
+    padding: 5px;
+
+    .lives > strong {
+      color: green;
+    }
+
+    .scores > strong {
+      color: orange;
+    }
+  }
+
+}
+
