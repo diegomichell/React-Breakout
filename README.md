@@ -1,7 +1,9 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/a627a95d-b6e0-4a2f-95e1-a143a4575be5/deploy-status)](https://app.netlify.com/sites/breakout-react/deploys)
+
 # Breakout 
 Made with ❤️ React
 
-See live and play around at [here](https://codesandbox.io/s/wtx5d)
+See live and play around at [here](https://breakout-react.netlify.app/)
 
 ## Available Scripts
 
