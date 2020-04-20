@@ -63,21 +63,13 @@ class Game extends Component<GameProps> {
   componentDidMount() {
     window.onmousemove = (e) => {
       const x = e.offsetX;
-
-      if (x + paddleWidth / 2 >= WIDTH || x - paddleWidth / 2 <= 0) {
-        return;
-      }
-
-      setTimeout(() => {
-        this.setState({
-          paddle: {
-            ...this.state.paddle,
-            x,
-          }
-        });
-      }, 30);
+      this.movePaddle(x);
     };
 
+    window.ontouchmove = (e) => {
+      const x = e.targetTouches[0].pageX;
+      this.movePaddle(x);
+    };
   }
 
   startGame() {
@@ -149,6 +141,21 @@ class Game extends Component<GameProps> {
     } else  {
       onFinished(bricks.length === 0);
     }
+  }
+
+  movePaddle(x: number) {
+    if (x + paddleWidth / 2 >= WIDTH || x - paddleWidth / 2 <= 0) {
+      return;
+    }
+
+    setTimeout(() => {
+      this.setState({
+        paddle: {
+          ...this.state.paddle,
+          x,
+        }
+      });
+    }, 30);
   }
 
   detectCollisionWithBricks() {
