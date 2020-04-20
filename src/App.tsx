@@ -1,7 +1,7 @@
 /**
  * @author Diego Michel
  */
-import React, {Component, useState, useRef} from "react";
+import React, {Component, useState, useRef, useEffect} from "react";
 import Konva from "konva";
 import {Circle, Layer, Rect, Stage} from "react-konva";
 import StartGameModal from "./components/start-game-modal/StartGameModal";
@@ -248,11 +248,17 @@ class Game extends Component<GameProps> {
 
 const App = () => {
   const gameRef: React.MutableRefObject<Game|any> = useRef(null);
-  const [lives, setLives] = useState(3);
+  const [lives, setLives] = useState(0);
   const [scores, setScores] = useState(0);
   const [showStart, setShowStart] = useState(true);
   const [username, setUsername] = useState('');
   const [status, setStatus] = useState({isFinished: false, didWin: false});
+
+  useEffect(() => {
+    if(lives === 3) {
+      gameRef.current.startGame();
+    }
+  }, [lives]);
 
   return (
     <div className="container App">
@@ -268,7 +274,7 @@ const App = () => {
         handleClose={() => setShowStart(false)}
         onStart={user => {
           setUsername(user);
-          gameRef.current.startGame();
+          setLives(3);
         }}
       />
       <FinishedGameModal
@@ -276,9 +282,8 @@ const App = () => {
         didWin={status.didWin}
         handleClose={() => setStatus({...status, isFinished: false})}
         onPlayAgain={() => {
-          setLives(3);
           setScores(0);
-          gameRef.current.startGame();
+          setLives(3);
         }}
       />
       <Stage
