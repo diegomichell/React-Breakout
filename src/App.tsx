@@ -1,9 +1,11 @@
 /**
  * @author Diego Michel
  */
-import React, {Component, useState} from "react";
+import React, {Component, useState, useRef} from "react";
 import Konva from "konva";
 import {Circle, Layer, Rect, Stage} from "react-konva";
+import StartGameModal from "./components/start-game-modal/StartGameModal";
+import FinishedGameModal from "./components/finished-game-modal/FinishedGameModal";
 
 import "./App.scss";
 
@@ -76,12 +78,15 @@ class Game extends Component<GameProps> {
       }, 30);
     };
 
+  }
+
+  startGame() {
     this.restartPositionAndVelocityOfBall();
     this.runGameLoop();
   }
 
   runGameLoop() {
-    const {lives, onDie, onScore} = this.props;
+    const {lives, onDie, onScore, onFinished} = this.props;
     const {bricks, ball, velocityX, velocityY} = this.state;
     const updatedBall = {
       ...ball,
@@ -137,6 +142,8 @@ class Game extends Component<GameProps> {
 
     if (lives > 0 && bricks.length > 0) {
       setTimeout(this.runGameLoop.bind(this), 5);
+    } else  {
+      onFinished(bricks.length === 0);
     }
   }
 
@@ -236,8 +243,12 @@ class Game extends Component<GameProps> {
 }
 
 const App = () => {
+  const gameRef: React.MutableRefObject<Game|any> = useRef(null);
   const [lives, setLives] = useState(3);
   const [scores, setScores] = useState(0);
+  const [showStart, setShowStart] = useState(true);
+  const [username, setUsername] = useState('');
+  const [status, setStatus] = useState({isFinished: false, didWin: false});
 
   return (
     <div className="container App">
@@ -245,8 +256,27 @@ const App = () => {
       <span className="app-description">React breakout game</span>
       <div className="game-info">
         <span className="lives mr-5"><strong>Lives:</strong> {lives}</span>
-        <span className="scores"><strong>Scores:</strong> {scores}</span>
+        <span className="scores mr-5"><strong>Scores:</strong> {scores}</span>
+        {username && <span className="username"><strong>Name:</strong> {username}</span>}
       </div>
+      <StartGameModal
+        show={showStart}
+        handleClose={() => setShowStart(false)}
+        onStart={user => {
+          setUsername(user);
+          gameRef.current.startGame();
+        }}
+      />
+      <FinishedGameModal
+        show={status.isFinished}
+        didWin={status.didWin}
+        handleClose={() => setStatus({...status, isFinished: false})}
+        onPlayAgain={() => {
+          setLives(3);
+          setScores(0);
+          gameRef.current.startGame();
+        }}
+      />
       <Stage
         className="game-stage"
         width={WIDTH}
@@ -255,6 +285,8 @@ const App = () => {
       >
         <Layer>
           <Game
+            ref={gameRef}
+            onFinished={didWin => setStatus({isFinished: true, didWin})}
             lives={lives}
             onDie={() => {
               setLives(lives - 1);

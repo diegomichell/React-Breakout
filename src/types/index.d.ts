@@ -1,7 +1,8 @@
 interface GameProps {
   lives: number,
   onDie: Function,
-  onScore: Function
+  onScore: Function,
+  onFinished: (didWin: boolean) => void
 }
 
 interface Brick {
